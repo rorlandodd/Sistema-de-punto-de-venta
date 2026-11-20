@@ -1,0 +1,12 @@
+services:
+  pos:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      APP_URL: ${APP_URL:-http://localhost:3000}
+    volumes:
+      - pos_data:/app/data
+volumes:
+  pos_data:

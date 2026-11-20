@@ -1,0 +1,4 @@
+// Code 39: narrow/wide bar-space patterns, with start/stop and quiet zones.
+const alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%';
+const encodings=[0x034,0x121,0x061,0x160,0x031,0x130,0x070,0x025,0x124,0x064,0x109,0x049,0x148,0x019,0x118,0x058,0x00d,0x10c,0x04c,0x01c,0x103,0x043,0x142,0x013,0x112,0x052,0x007,0x106,0x046,0x016,0x181,0x0c1,0x1c0,0x091,0x190,0x0d0,0x085,0x184,0x0c4,0x0a8,0x0a2,0x08a,0x02a];
+export function receiptBarcode(value:string){const text=String(value).toUpperCase();if(!text||[...text].some(c=>!alphabet.includes(c)))throw Error('Identificador no compatible con Code 39');const symbols=[0x094,...[...text].map(c=>encodings[alphabet.indexOf(c)]),0x094];let x=12;const bars:{x:number,width:number}[]=[];for(const symbol of symbols){for(let i=0;i<9;i++){const width=symbol&(1<<(8-i))?2:1;if(i%2===0)bars.push({x,width});x+=width}x++}return {text,bars,width:x+11};}

@@ -1,0 +1,12 @@
+import {strict as a} from 'node:assert';
+import {initial,mutate} from './engine.ts';
+import {saveFiscal,validRut} from './fiscal.ts';
+const s=initial('test','admin@example.test');
+const data={action:'fiscalSettings',rut:'12.345.678-5',legalName:'Emisor de prueba',emissionModel:'pending',environment:'production',status:'connected',apiKey:'never-store'};
+a.equal(validRut(data.rut),true);a.equal(saveFiscal(data).rut,'12345678-5');
+a.throws(()=>saveFiscal({...data,rut:'12345678-0'}),/RUT/);
+a.throws(()=>saveFiscal({...data,resolutionDate:'2026-02-30'}),/Fecha/);
+a.throws(()=>mutate(s,{role:'ventas'},data),/permiso/);
+a.throws(()=>mutate(s,{role:'inventario'},data),/permiso/);
+mutate(s,s.users[0],data);a.equal(s.fiscal.environment,'certification');a.equal(s.fiscal.status,'not_connected');a.equal(s.fiscal.apiKey,undefined);a.equal(s.sales.length,0);
+console.log('OK: preparación SII, RUT, fechas, permisos y bloqueo de activación falsa');

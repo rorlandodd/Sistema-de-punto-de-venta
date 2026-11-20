@@ -1,0 +1,2 @@
+import {receiptBarcode} from '../../lib/receipt-barcode';
+export default function ReceiptBarcode({value}: {value:string}){const code=receiptBarcode(value);return <div className="sale-barcode"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label={'Código de barras de venta '+code.text} viewBox={`0 0 ${code.width} 64`} preserveAspectRatio="none"><rect width={code.width} height="64" fill="#fff"/>{code.bars.map((bar,i)=><rect key={i} x={bar.x} y="4" width={bar.width} height="56" fill="#000"/>)}</svg><span>{code.text}</span></div>}

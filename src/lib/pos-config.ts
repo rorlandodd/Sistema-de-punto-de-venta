@@ -1,0 +1,3 @@
+export const defaultConfig={payments:['cash','card','transfer'],transferInstructions:'',requireCardReference:false,requireTransferReference:false,receiptPrefix:'V',showBarcode:true,showCashier:true,openingDefault:0,minimumDefault:5,cashierCashMoves:false,inventoryDelete:true,requireCloseReason:true,scanQuantity:true,allowMixed:true,cashierDiscount:false,maxDiscountPercent:10,returnDays:30,inventoryPurchases:true,inventoryCostEdit:true};
+export function posConfig(s:any){return {...defaultConfig,...s.config};}
+export function expectedCash(shift:any){return (shift?.opening||0)+(shift?.cash||0)+(shift?.cashIn||0)-(shift?.cashOut||0)-(shift?.cashRefund||0);}

@@ -1,0 +1,8 @@
+import {strict as a} from 'node:assert';
+import {loyaltyHistory} from './loyalty-history.ts';
+const s={loyaltyAccounts:{'12345678-5':{balance:400}},sales:[{id:'sale',number:'V-1',cost:999,loyalty:{earned:100,redeemed:20}}],returns:[{saleId:'sale',number:'D-1',loyalty:{restored:10,removed:50}}],loyaltyMovements:Array.from({length:105},(_,i)=>({id:String(i),rut:'12345678-5',date:new Date(Date.UTC(2026,10,18,12,0,105-i)).toISOString(),delta:80,balance:80*(105-i),kind:'Compra',saleId:'sale',reference:'V-1',user:'Caja'}))};
+s.loyaltyMovements.unshift({id:'refund',rut:'12345678-5',date:'2026-11-19T01:00:00Z',kind:'Devolución',delta:-40,balance:400,saleId:'sale',reference:'D-1',user:'Admin'});
+s.loyaltyMovements.unshift({id:'other',rut:'11111111-1',date:'2026-11-19T02:00:00Z',delta:200,balance:200,kind:'Compra'});
+const get=(extra={},role='ventas')=>loyaltyHistory(s,role,new URLSearchParams({pointsRut:'12.345.678-5',...extra}));
+a.equal(get().total,106);a.equal(get().items.length,15);a.equal(get({page:'8'}).items.length,1);a.equal(get({page:'999'}).page,8);a.equal(get().balance,400);a.equal(get().items[0].before,440);a.deepEqual(get().items[0].details,{restored:10,removed:50});a.equal(get({kind:'Compra'}).total,105);a.deepEqual(get({kind:'Compra'}).items[0].details,{earned:100,redeemed:20});a.equal(get({from:'2026-11-18',to:'2026-11-18'}).total,106);a.equal(get({from:'2026-11-19'}).total,0);a.ok(!JSON.stringify(get()).includes('cost'));a.throws(()=>get({},'inventario'),/permiso/);a.throws(()=>get({pointsRut:'123'}),/RUT/);a.throws(()=>get({from:'2026-12-01',to:'2026-11-01'}),/Intervalo/);
+console.log('OK: historial completo por RUT, permisos, paginación, filtros en hora Chile y desglose sin costos');

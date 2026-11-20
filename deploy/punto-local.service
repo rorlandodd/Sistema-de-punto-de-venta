@@ -1,0 +1,20 @@
+[Unit]
+Description=Punto Local
+After=network.target
+[Service]
+Type=simple
+User=puntolocal
+Group=puntolocal
+WorkingDirectory=/opt/punto-local
+ExecStart=/usr/bin/node /opt/punto-local/dist/server.cjs
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/punto-local/data
+[Install]
+WantedBy=multi-user.target

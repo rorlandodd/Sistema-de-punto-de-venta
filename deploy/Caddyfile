@@ -1,0 +1,4 @@
+# Reemplaza este dominio por el tuyo. Caddy se ejecuta en el host.
+ventas.ejemplo.cl {
+    reverse_proxy 127.0.0.1:3000
+}
